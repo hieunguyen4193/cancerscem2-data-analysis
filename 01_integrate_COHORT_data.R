@@ -18,6 +18,7 @@ output.version <- "20251026"
 
 # candidate.cohorts <- c("LUSC", "LUAD", "NSCLC", "STAD", "CRC", "HCC", "BRCA")
 candidate.cohorts <- c("NSCLC")
+# candidate.cohorts <- c("CRC")
 
 for (input.cohort in candidate.cohorts){
   print("---------------------------------------------------------------")
@@ -85,29 +86,31 @@ for (input.cohort in candidate.cohorts){
     print("finished reading in saved merged object ...")
   }
   
-  # num.PCA <- 25
-  # num.PC.used.in.UMAP <- 25
-  # num.PC.used.in.Clustering <- 25
-  # regressOut_mode <- NULL
-  # features_to_regressOut <- NULL
-  # use.sctransform <- TRUE
-  # vars.to.regress <- c("percent.mt")
-  # cluster.resolution <- 0.5
-  # 
-  # PROJECT <- input.cohort
-  # if (file.exists(file.path(path.to.01.output, "s8_output", sprintf("%s.output.s8.rds", PROJECT))) == FALSE){
-  #   DefaultAssay(s.obj) <- "RNA"
-  #   s.obj <- JoinLayers(s.obj)
-  #   s.obj.integrated <- s8.integration.and.clustering_V5(s.obj = s.obj, 
-  #                                                        save.RDS.s8 = TRUE,
-  #                                                        path.to.output = path.to.01.output,
-  #                                                        use.sctransform = TRUE,
-  #                                                        num.PCA = num.PCA,
-  #                                                        num.PC.used.in.UMAP = num.PC.used.in.UMAP,
-  #                                                        num.PC.used.in.Clustering = num.PC.used.in.Clustering,
-  #                                                        cluster.resolution = cluster.resolution,
-  #                                                        vars.to.regress = vars.to.regress, 
-  #                                                        remove.genes = NULL)
-  # }
+  num.PCA <- 25
+  num.PC.used.in.UMAP <- 25
+  num.PC.used.in.Clustering <- 25
+  regressOut_mode <- NULL
+  features_to_regressOut <- NULL
+  use.sctransform <- TRUE
+  vars.to.regress <- c("percent.mt")
+  cluster.resolution <- 0.5
+
+  PROJECT <- input.cohort
+  if (file.exists(file.path(path.to.01.output, "s8_output", sprintf("%s.output.s8.rds", PROJECT))) == FALSE){
+    DefaultAssay(s.obj) <- "RNA"
+    s.obj <- JoinLayers(s.obj)
+    s.obj.integrated <- s8.integration.and.clustering_V5(s.obj = s.obj,
+                                                         save.RDS.s8 = TRUE,
+                                                         path.to.output = path.to.01.output,
+                                                         use.sctransform = TRUE,
+                                                         num.PCA = num.PCA,
+                                                         num.PC.used.in.UMAP = num.PC.used.in.UMAP,
+                                                         num.PC.used.in.Clustering = num.PC.used.in.Clustering,
+                                                         cluster.resolution = cluster.resolution,
+                                                         vars.to.regress = vars.to.regress,
+                                                         remove.genes = NULL)
+  }
 }
 
+# DimPlot(s.obj.integrated, reduction = "harmony_UMAP", group.by = "celltype", label = TRUE, label.box = TRUE)
+DimPlot(s.obj.integrated, reduction = "harmony_UMAP", split.by = "SampleID", label = TRUE, label.box = TRUE, ncol = 3)
